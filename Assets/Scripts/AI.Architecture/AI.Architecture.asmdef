@@ -1,0 +1,16 @@
+{
+    "name": "AI.Architecture",
+    "rootNamespace": "AI.Architecture",
+    "references": [
+        "GUID:ffd27fa616fde8f43a087f318f7dce44"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}
