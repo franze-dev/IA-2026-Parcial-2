@@ -1897,7 +1897,7 @@ GameObject:
   - component: {fileID: 493711101}
   - component: {fileID: 493711104}
   - component: {fileID: 493711103}
-  - component: {fileID: 493711102}
+  - component: {fileID: 493711105}
   m_Layer: 5
   m_Name: Simulation
   m_TagString: Untagged
@@ -1925,27 +1925,6 @@ RectTransform:
   m_AnchoredPosition: {x: 144.59998, y: 0}
   m_SizeDelta: {x: 289.09998, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &493711102
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 493711100}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0be1627cb25d13849a4f8784a91d39b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  generationsCountTxt: {fileID: 1090514405}
-  bestFitnessTxt: {fileID: 244464459}
-  avgFitnessTxt: {fileID: 1055199135}
-  worstFitnessTxt: {fileID: 2080365211}
-  timerTxt: {fileID: 2046662149}
-  timerSlider: {fileID: 1314058050}
-  pauseBtn: {fileID: 1143498180}
-  stopBtn: {fileID: 898333281}
-  startConfigurationScreen: {fileID: 886660823}
 --- !u!114 &493711103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1984,6 +1963,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 493711100}
   m_CullTransparentMesh: 0
+--- !u!114 &493711105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493711100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81ce1e51b6e73304f8fcd79c14a28825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Examples::Examples.Tanks.SimulationScreen
+  generationsCountTxt: {fileID: 1090514405}
+  bestFitnessTxt: {fileID: 244464459}
+  avgFitnessTxt: {fileID: 1055199135}
+  worstFitnessTxt: {fileID: 2080365211}
+  timerTxt: {fileID: 2046662149}
+  timerSlider: {fileID: 1314058050}
+  pauseBtn: {fileID: 1143498180}
+  stopBtn: {fileID: 898333281}
+  startConfigurationScreen: {fileID: 886660823}
 --- !u!1 &495979667
 GameObject:
   m_ObjectHideFlags: 0
@@ -2787,7 +2787,7 @@ GameObject:
   - component: {fileID: 886660824}
   - component: {fileID: 886660827}
   - component: {fileID: 886660826}
-  - component: {fileID: 886660825}
+  - component: {fileID: 886660828}
   m_Layer: 5
   m_Name: StartConfiguration
   m_TagString: Untagged
@@ -2815,40 +2815,6 @@ RectTransform:
   m_AnchoredPosition: {x: 144.59998, y: 0}
   m_SizeDelta: {x: 289.09998, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &886660825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 886660823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 522154f782d8e9f42a02ce353c63bde5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  populationCountTxt: {fileID: 2013683210}
-  populationCountSlider: {fileID: 921514421}
-  eliteCountTxt: {fileID: 452731736}
-  eliteCountSlider: {fileID: 246616431}
-  mutationChanceTxt: {fileID: 753078260}
-  mutationChanceSlider: {fileID: 1997448332}
-  mutationRateTxt: {fileID: 1845926946}
-  mutationRateSlider: {fileID: 1148270170}
-  hiddenLayersCountTxt: {fileID: 1021662891}
-  hiddenLayersCountSlider: {fileID: 2073947858}
-  neuronsPerHLCountTxt: {fileID: 1934763952}
-  neuronsPerHLSlider: {fileID: 2107534795}
-  biasTxt: {fileID: 1630403541}
-  biasSlider: {fileID: 957861011}
-  sigmoidSlopeTxt: {fileID: 859331378}
-  sigmoidSlopeSlider: {fileID: 1585947224}
-  inputsTxt: {fileID: 0}
-  inputsSlider: {fileID: 0}
-  outputsTxt: {fileID: 0}
-  outputsSlider: {fileID: 0}
-  startButton: {fileID: 1703906448}
-  simulationScreen: {fileID: 493711100}
 --- !u!114 &886660826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2887,6 +2853,40 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 886660823}
   m_CullTransparentMesh: 0
+--- !u!114 &886660828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886660823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e1f0cdd6f1559a4ea61860567b394a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Examples::Examples.Tanks.StartConfigurationScreen
+  populationCountTxt: {fileID: 2013683210}
+  populationCountSlider: {fileID: 921514421}
+  minesCountTxt: {fileID: 758824071}
+  minesCountSlider: {fileID: 910829719}
+  generationDurationTxt: {fileID: 1609345660}
+  generationDurationSlider: {fileID: 2104745613}
+  eliteCountTxt: {fileID: 452731736}
+  eliteCountSlider: {fileID: 246616431}
+  mutationChanceTxt: {fileID: 753078260}
+  mutationChanceSlider: {fileID: 1997448332}
+  mutationRateTxt: {fileID: 1845926946}
+  mutationRateSlider: {fileID: 1148270170}
+  hiddenLayersCountTxt: {fileID: 1021662891}
+  hiddenLayersCountSlider: {fileID: 2073947858}
+  neuronsPerHLCountTxt: {fileID: 1934763952}
+  neuronsPerHLSlider: {fileID: 2107534795}
+  biasTxt: {fileID: 1630403541}
+  biasSlider: {fileID: 957861011}
+  sigmoidSlopeTxt: {fileID: 859331378}
+  sigmoidSlopeSlider: {fileID: 1585947224}
+  startButton: {fileID: 1703906448}
+  simulationScreen: {fileID: 493711100}
 --- !u!1 &898333279
 GameObject:
   m_ObjectHideFlags: 0
@@ -5914,6 +5914,7 @@ MonoBehaviour:
   NeuronsCountPerHL: 7
   Bias: -1
   P: 0.5
+  networkMode: 0
 --- !u!4 &1690210759
 Transform:
   m_ObjectHideFlags: 0

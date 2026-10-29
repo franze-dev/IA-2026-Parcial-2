@@ -108,6 +108,7 @@ namespace Examples.Tanks
         void OnMutationChanceChange(float value)
         {
             PopulationManager.Instance.MutationChance = value / 100.0f;
+            Debug.Log($"mutation chance: {value / 100.0f}");
 
             mutationChanceTxt.text = string.Format(mutationChanceText, (int)(PopulationManager.Instance.MutationChance * 100));
         }
@@ -115,6 +116,8 @@ namespace Examples.Tanks
         void OnMutationRateChange(float value)
         {
             PopulationManager.Instance.MutationRate = value / 100.0f;
+
+            Debug.Log($"mutation rate: {value / 100.0f}");
 
             mutationRateTxt.text = string.Format(mutationRateText, (int)(PopulationManager.Instance.MutationRate * 100));
         }
