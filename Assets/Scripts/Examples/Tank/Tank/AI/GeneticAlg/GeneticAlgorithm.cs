@@ -36,18 +36,12 @@ namespace Examples.Tanks
 
         public Genome[] Epoch(Genome[] oldGenomes)
         {
-            totalFitness = 0;
-
             population.Clear();
             newPopulation.Clear();
 
             population.AddRange(oldGenomes);
             population.Sort(HandleComparison);
-
-            foreach (Genome g in population)
-            {
-                totalFitness += g.fitness;
-            }
+            RecalculateTotalFitness();
 
             SelectElite();
 
@@ -57,6 +51,16 @@ namespace Examples.Tanks
             }
 
             return newPopulation.ToArray();
+        }
+
+        private void RecalculateTotalFitness()
+        {
+            totalFitness = 0;
+
+            foreach (Genome g in population)
+            {
+                totalFitness += g.fitness;
+            }
         }
 
         void SelectElite()
@@ -72,50 +76,74 @@ namespace Examples.Tanks
             Genome mom = RouletteSelection();
             Genome dad = RouletteSelection();
 
-            Genome child1;
-            Genome child2;
+            if (mom == null || dad == null)
+            {
+                Debug.LogWarning("Could not find mom/dad");
+                return;
+            }
 
-            Crossover(mom, dad, out child1, out child2);
+            Crossover(mom, dad, out Genome child1, out Genome child2);
 
-            newPopulation.Add(child1);
-            newPopulation.Add(child2);
+            if (newPopulation.Count < population.Count)
+                newPopulation.Add(child1);
+
+            if (newPopulation.Count < population.Count)
+                newPopulation.Add(child2);
         }
 
         void Crossover(Genome mom, Genome dad, out Genome child1, out Genome child2)
         {
-            child1 = new Genome();
-            child2 = new Genome();
+            int momGenesCount = mom.GenesCount;
 
-            child1.genome = new float[mom.genome.Length];
-            child2.genome = new float[mom.genome.Length];
+            child1 = new Genome(momGenesCount);
+            child2 = new Genome(momGenesCount);
 
-            int pivot = Random.Range(0, mom.genome.Length);
+            int pivotMom = Random.Range(0, momGenesCount);
+            int pivotDad = Random.Range(0, momGenesCount);
 
-            for (int i = 0; i < pivot; i++)
+            for (int i = 0; i < momGenesCount; i++)
             {
-                child1.genome[i] = mom.genome[i];
+                InheritVariant(mom, i, pivotMom, out child1.chromosomeA[i], out child1.isDominantA[i]);
+
+                InheritVariant(dad, i, pivotDad, out child1.chromosomeB[i], out child1.isDominantB[i]);
+
+                InheritComplementaryVariant(mom, i, pivotMom, out child2.chromosomeA[i], out child2.isDominantA[i]);
+
+                InheritComplementaryVariant(dad, i, pivotDad, out child2.chromosomeB[i], out child2.isDominantB[i]);
 
                 if (ShouldMutate())
-                    child1.genome[i] += Random.Range(-mutationRate, mutationRate);
-
-                child2.genome[i] = dad.genome[i];
+                    child1.chromosomeA[i] += Random.Range(-mutationRate, mutationRate);
 
                 if (ShouldMutate())
-                    child2.genome[i] += Random.Range(-mutationRate, mutationRate);
+                    child1.chromosomeB[i] += Random.Range(-mutationRate, mutationRate);
+
+                if (ShouldMutate())
+                    child2.chromosomeA[i] += Random.Range(-mutationRate, mutationRate);
+
+                if (ShouldMutate())
+                    child2.chromosomeB[i] += Random.Range(-mutationRate, mutationRate);
             }
 
-            for (int i = pivot; i < mom.genome.Length; i++)
-            {
-                child2.genome[i] = mom.genome[i];
+            child1.RefreshPhenotype();
+            child2.RefreshPhenotype();
+        }
 
-                if (ShouldMutate())
-                    child2.genome[i] += Random.Range(-mutationRate, mutationRate);
+        void InheritVariant(Genome parent, int index, int pivot, out float allele, out bool dominant)
+        {
+            bool useA = index < pivot;
 
-                child1.genome[i] = dad.genome[i];
+            allele = useA ? parent.chromosomeA[index] : parent.chromosomeB[index];
 
-                if (ShouldMutate())
-                    child1.genome[i] += Random.Range(-mutationRate, mutationRate);
-            }
+            dominant = useA ? parent.isDominantA[index] : parent.isDominantB[index];
+        }
+
+        void InheritComplementaryVariant(Genome parent, int index, int pivot, out float allele, out bool dominant)
+        {
+            bool useA = index >= pivot;
+
+            allele = useA ? parent.chromosomeA[index] : parent.chromosomeB[index];
+
+            dominant = useA ? parent.isDominantA[index] : parent.isDominantB[index];
         }
 
         bool ShouldMutate()
@@ -125,9 +153,8 @@ namespace Examples.Tanks
 
         int HandleComparison(Genome x, Genome y)
         {
-            return x.fitness > y.fitness ? 1 : x.fitness < y.fitness ? -1 : 0;
+            return y.fitness.CompareTo(x.fitness);
         }
-
 
         public Genome RouletteSelection()
         {

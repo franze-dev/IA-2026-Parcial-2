@@ -1,32 +1,83 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 
 namespace Examples.Tanks
 {
     public class Genome
     {
         public float[] genome;
-        public float fitness = 0;
+        public float[] chromosomeA;
+        public float[] chromosomeB;
+        public bool[] isDominantA;
+        public bool[] isDominantB;
 
-        public Genome(float[] genes)
-        {
-            genome = genes;
-            fitness = 0;
-        }
+        public float fitness = 0f;
+
+        public int GenesCount => chromosomeA.Length;
 
         public Genome(int genesCount)
         {
-            genome = new float[genesCount];
+            chromosomeA = new float[genesCount];
+            chromosomeB = new float[genesCount];
+            isDominantA = new bool[genesCount];
+            isDominantB = new bool[genesCount];
 
-            for (int j = 0; j < genesCount; j++)
-                genome[j] = Random.Range(-1.0f, 1.0f);
+            for (int i = 0; i < genesCount; i++)
+            {
+                chromosomeA[i] = Random.Range(-1f, 1f);
+                chromosomeB[i] = Random.Range(-1f, 1f);
 
-            fitness = 0;
+                isDominantA[i] = Random.value < 0.5f;
+                isDominantB[i] = Random.value < 0.5f;
+            }
+
+            fitness = 0f;
+            RefreshPhenotype();
+        }
+
+        public Genome(float[] genes)
+        {
+            int count = genes.Length;
+
+            chromosomeA = (float[])genes.Clone();
+            chromosomeB = (float[])genes.Clone();
+            isDominantA = new bool[count];
+            isDominantB = new bool[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                isDominantA[i] = Random.value < 0.5f;
+                isDominantB[i] = Random.value < 0.5f;
+            }
+
+            fitness = 0f;
+            RefreshPhenotype();
         }
 
         public Genome()
         {
-            fitness = 0;
+            fitness = 0f;
         }
 
+        public float[] GetExpressedPhenotype()
+        {
+            float[] phenotype = new float[GenesCount];
+
+            for (int i = 0; i < phenotype.Length; i++)
+            {
+                phenotype[i] = isDominantA[i] && !isDominantB[i] ?
+                               chromosomeA[i] :
+                               !isDominantA[i] && isDominantB[i] ?
+                               chromosomeB[i] :
+                               (chromosomeA[i] + chromosomeB[i]) * 0.5f;
+            }
+
+            return phenotype;
+        }
+
+        public void RefreshPhenotype()
+        {
+            genome = GetExpressedPhenotype();
+        }
     }
 }
