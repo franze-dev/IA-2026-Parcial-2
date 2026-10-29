@@ -1,9 +1,16 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace Examples.Tanks
 {
+    public enum NetworkMode
+    {
+        Standard,
+        Convolutional,
+        Deconvolutional
+    }
+
     public class PopulationManager : MonoBehaviour
     {
         public GameObject TankPrefab;
@@ -21,13 +28,14 @@ namespace Examples.Tanks
         public float MutationChance = 0.10f;
         public float MutationRate = 0.01f;
 
-        public int InputsCount = 4;
-        public int HiddenLayers = 1;
+        public int InputsCount = 5;
+        public int HiddenLayers = 2;
         public int OutputsCount = 2;
         public int NeuronsCountPerHL = 7;
         public float Bias = 1f;
         public float P = 0.5f;
 
+        public NetworkMode networkMode = NetworkMode.Standard;
 
         GeneticAlgorithm genAlg;
 
@@ -172,24 +180,52 @@ namespace Examples.Tanks
         }
 
         // Creates a new NeuralNetwork
+
         NeuralNetwork CreateBrain()
         {
             NeuralNetwork brain = new NeuralNetwork();
 
-            // Add first neuron layer that has as many neurons as inputs
+            // input 
+            Debug.Log(InputsCount);
+
             brain.AddFirstNeuronLayer(InputsCount, Bias, P);
 
+            // hidden 
             for (int i = 0; i < HiddenLayers; i++)
             {
-                // Add each hidden layer with custom neurons count
-                brain.AddNeuronLayer(NeuronsCountPerHL, Bias, P);
+                int neurons = GetHiddenNeuronCount(i);
+                brain.AddNeuronLayer(neurons, Bias, P);
             }
 
-            // Add the output layer with as many neurons as outputs
+            // output 
             brain.AddNeuronLayer(OutputsCount, Bias, P);
 
             return brain;
         }
+
+        int GetHiddenNeuronCount(int layerIndex)
+        {
+            int maxNeurons = Mathf.Max(1, NeuronsCountPerHL);
+            int minNeurons = Mathf.Max(1, maxNeurons / 3);
+
+            if (networkMode == NetworkMode.Standard)
+                return maxNeurons;
+
+            float progress = HiddenLayers <= 1 ? 0f : layerIndex / (float)(HiddenLayers - 1);
+
+            switch (networkMode)
+            {
+                case NetworkMode.Convolutional:
+                    return Mathf.RoundToInt(Mathf.Lerp(maxNeurons, minNeurons, progress));
+
+                case NetworkMode.Deconvolutional:
+                    return Mathf.RoundToInt(Mathf.Lerp(minNeurons, maxNeurons, progress));
+
+                default:
+                    return maxNeurons;
+            }
+        }
+
 
         // Evolve!!!
         void Epoch()
@@ -222,15 +258,22 @@ namespace Examples.Tanks
                 populationGOs[i].transform.position = GetRandomPos();
                 populationGOs[i].transform.rotation = GetRandomRot();
             }
+
+            CreateMines();
         }
 
-        // Update is called once per frame
         void FixedUpdate()
         {
             if (!isRunning)
                 return;
 
             float dt = Time.fixedDeltaTime;
+
+            if (mines.Count == 0)
+            {
+                Epoch();
+                return;
+            }
 
             for (int i = 0; i < Mathf.Clamp((float)(IterationCount / 100.0f) * 50, 1, 50); i++)
             {
@@ -369,36 +412,38 @@ namespace Examples.Tanks
             return Quaternion.AngleAxis(Random.value * 360.0f, Vector3.up);
         }
 
+
         GameObject GetNearestMine(Vector3 pos)
         {
-            GameObject nearest = mines[0];
-            float distance = (pos - nearest.transform.position).sqrMagnitude;
-
-            foreach (GameObject go in mines)
-            {
-                float newDist = (go.transform.position - pos).sqrMagnitude;
-                if (newDist < distance)
-                {
-                    nearest = go;
-                    distance = newDist;
-                }
-            }
-
-            return nearest;
+            return GetNearestFromList(mines, pos);
         }
 
         GameObject GetNearestGoodMine(Vector3 pos)
         {
-            GameObject nearest = mines[0];
-            float distance = (pos - nearest.transform.position).sqrMagnitude;
+            return GetNearestFromList(goodMines, pos);
+        }
 
-            foreach (GameObject go in goodMines)
+        GameObject GetNearestBadMine(Vector3 pos)
+        {
+            return GetNearestFromList(badMines, pos);
+        }
+
+        GameObject GetNearestFromList(List<GameObject> objectives, Vector3 pos)
+        {
+            GameObject nearest = null;
+            float bestDistance = float.MaxValue;
+
+            foreach (GameObject objective in objectives)
             {
-                float newDist = (go.transform.position - pos).sqrMagnitude;
-                if (newDist < distance)
+                if (objective == null)
+                    continue;
+
+                float distance = (objective.transform.position - pos).sqrMagnitude;
+
+                if (distance < bestDistance)
                 {
-                    nearest = go;
-                    distance = newDist;
+                    bestDistance = distance;
+                    nearest = objective;
                 }
             }
 

@@ -128,20 +128,20 @@ namespace Examples.Tanks
             child2.RefreshPhenotype();
         }
 
-        void InheritVariant(Genome parent, int index, int pivot, out float allele, out bool dominant)
+        void InheritVariant(Genome parent, int index, int pivot, out float variant, out bool dominant)
         {
             bool useA = index < pivot;
 
-            allele = useA ? parent.chromosomeA[index] : parent.chromosomeB[index];
+            variant = useA ? parent.chromosomeA[index] : parent.chromosomeB[index];
 
             dominant = useA ? parent.isDominantA[index] : parent.isDominantB[index];
         }
 
-        void InheritComplementaryVariant(Genome parent, int index, int pivot, out float allele, out bool dominant)
+        void InheritComplementaryVariant(Genome parent, int index, int pivot, out float variant, out bool dominant)
         {
             bool useA = index >= pivot;
 
-            allele = useA ? parent.chromosomeA[index] : parent.chromosomeB[index];
+            variant = useA ? parent.chromosomeA[index] : parent.chromosomeB[index];
 
             dominant = useA ? parent.isDominantA[index] : parent.isDominantB[index];
         }
