@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -405,22 +405,18 @@ namespace Examples.Tanks
             return nearest;
         }
 
-        GameObject GetNearestBadMine(Vector3 pos)
+
+        internal bool TryConsumeObjective(GameObject objective)
         {
-            GameObject nearest = mines[0];
-            float distance = (pos - nearest.transform.position).sqrMagnitude;
+            if (objective == null || !mines.Remove(objective))
+                return false;
 
-            foreach (GameObject go in badMines)
-            {
-                float newDist = (go.transform.position - pos).sqrMagnitude;
-                if (newDist < distance)
-                {
-                    nearest = go;
-                    distance = newDist;
-                }
-            }
+            goodMines.Remove(objective);
+            badMines.Remove(objective);
 
-            return nearest;
+            Destroy(objective);
+
+            return true;
         }
 
         #endregion

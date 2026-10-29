@@ -49,7 +49,7 @@ namespace Examples.Tanks
 
         protected bool IsCloseToMine(GameObject mine)
         {
-            return (transform.position - nearMine.transform.position).sqrMagnitude <= 2.0f;
+            return mine != null && (transform.position - mine.transform.position).sqrMagnitude <= 2f;
         }
 
         protected void SetForces(float leftForce, float rightForce, float dt)
@@ -67,8 +67,12 @@ namespace Examples.Tanks
 
             if (IsCloseToMine(nearMine))
             {
-                OnTakeMine(nearMine);
-                PopulationManager.Instance.RelocateMine(nearMine);
+                GameObject objective = nearMine;
+
+                if (PopulationManager.Instance.TryConsumeObjective(objective))
+                {
+                    OnTakeMine(objective);
+                }
             }
         }
 
